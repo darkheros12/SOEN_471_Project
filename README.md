@@ -29,4 +29,12 @@ Football is one of the biggest entertainment in the world. With more than 18 000
 https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset
 
 #### Technologies and Algorithms: 
-
+Supervised learning
+  - Naive Bayes
+  - Random Forest
+  - Decision Tree
+Dataframe
+Spark
+RDD
+PyCharm
+Jupyter
