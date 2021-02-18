@@ -26,6 +26,7 @@ Football is one of the biggest entertainment in the world. With more than 18 000
 ### Materials and Methods (400 words):
 
 #### Dataset(s):
+we will use multiple datasets provided by Kaggle. The datasets will consist of football players from 2015 to 2021.
 https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset
 
 #### Technologies and Algorithms: 
@@ -33,8 +34,10 @@ Supervised learning
   - Naive Bayes
   - Random Forest
   - Decision Tree
+
 Dataframe
 Spark
 RDD
 PyCharm
 Jupyter
+Microsoft Office 365
