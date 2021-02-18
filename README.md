@@ -1,6 +1,6 @@
 # SOEN_471_Project
 
-Abstract:
+### Abstract:
 This project is a dataset analysis on statistics related to soccer. More specifically, this dataset contains statistics
 on 11 types of events in a soccer match, such as goals, shots, and passes, throughout 9,074 games and 941,009 events
 from various European Leagues, which include the Premier League (England), Ligue 1 (France), Bundesliga (Germany), 
@@ -9,4 +9,19 @@ Serie A (Italy), and La Liga (Spain). The data collected are events spanning fro
 shots taken by players based on their position on the pitch and predict which positions have a higher chance of success 
 (shots resulting in a goal).
 
-The dataset can be found here: https://www.kaggle.com/secareanualin/football-events
+***
+
+### Introduction:
+#### Context:
+#### Objectives:
+#### Presentation of the problem to solve:
+#### related work:
+
+***
+
+### Materials and Methods:
+#### Dataset(s):
+#### Technologies and Algorithms:
+
+
+The dataset can be found here: https://www.kaggle.com/stefanoleone992/fifa-20-complete-player-dataset
