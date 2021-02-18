@@ -1,27 +1,32 @@
 # SOEN_471_Project
 
-### Abstract:
-This project is a dataset analysis on statistics related to soccer. More specifically, this dataset contains statistics
-on 11 types of events in a soccer match, such as goals, shots, and passes, throughout 9,074 games and 941,009 events
-from various European Leagues, which include the Premier League (England), Ligue 1 (France), Bundesliga (Germany), 
-Serie A (Italy), and La Liga (Spain). The data collected are events spanning from the 2011/12 season until the 
-2016/17 season. The objective of this project is to apply supervised classification techniques to classify 
-shots taken by players based on their position on the pitch and predict which positions have a higher chance of success 
-(shots resulting in a goal).
+### Abstract (100 words):
+This project is a dataset analysis on statistics related to football. More specifically, this dataset contains statistics
+on over 18 000 players such as goals, dribbling, accuracy, shots, skills, and passes from data collect by sofifa.com. The data collected are stats spanning from the 2015 to 2021 season. The objective of this project is to apply supervised classification techniques to classify player's position based on their stats on the pitch and predict which positions have a higher chance of success. 
+(stats resulting in the best position).
 
 ***
 
-### Introduction:
+### Introduction (300 words):
+
 #### Context:
+Interest of player's performance on certain position. 
+This will allow potential coaches to use players in their best position.
+
 #### Objectives:
+to predict player's position based on their stats.
+
 #### Presentation of the problem to solve:
+Football is one of the biggest entertainment in the world. With more than 18 000 professional players across the world, it has become very hard to find players that could be a fit in a football club. Often, coaches would put players in their unpreferred position because no one can fill those holes.
+
 #### related work:
 
 ***
 
-### Materials and Methods:
+### Materials and Methods (400 words):
+
 #### Dataset(s):
-#### Technologies and Algorithms:
+https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset
 
+#### Technologies and Algorithms: 
 
-The dataset can be found here: https://www.kaggle.com/stefanoleone992/fifa-20-complete-player-dataset
