@@ -1,7 +1,7 @@
 # SOEN_471_Project
 
 ## Abstract:
-This project is a dataset analysis on statistics related to football. More specifically, this dataset contains statistics on over 18 000 players such as dribbling, passing, shooting, defending, and stamina from data collected by sofifa.com. The data collected are stats spanning from the 2015 to 2021 season. The objective of this project is to apply supervised classification techniques to classify player's position based on their statistics and predict which positions they are most likely to play in. The possible positions for players are goalkeeper, defender, midfielder and attacker.
+This project is a dataset analysis on statistics related to football. More specifically, this dataset contains statistics on over 18 000 players such as dribbling, passing, shooting, defending, and stamina from data collected by sofifa.com. The data collected are stats spanning from the 2015 to 2021 season. The objective of this project is to apply supervised classification techniques to classify player's position based on their statistics and predict which positions they are most likely to play in. Some of the possible positions for players are goalkeeper, defender, midfielder and attacker.
 
 ***
 
