@@ -15,9 +15,8 @@ def init_spark():
     return spark
 
 
-def prepare_data():
+def prepare_data(filename):
     spark = init_spark()
-    filename = "players_21.csv"
 
     # Read the csv files, this df will contain all  ~106 features
     df = spark.read.csv(filename, header=True)
@@ -37,14 +36,15 @@ def prepare_data():
                    "rw", "lam", "cam", "ram", "lm", "lcm", "cm", "rcm", "rm", "lwb", "ldm", "cdm", "rdm", "rwb", "lb",
                    "lcb", "cb", "rcb", "rb")
 
-    # Drop rows with any null values
-    df = df.dropna()
-
     # Here we are filtering out goalkeepers because there are some features which are only specific to goalies, such as
     # "gk_reflexes" and "gk_speed" which have values for only goalies and is "null" for any other type of players, and
     # also features that are only null for goalies such as "pace", "shooting" and "dribbling". Therefore we will
     # remove goalkeepers from the dataset completely and won't try to predict goalkeepers
     df = df.filter(df.team_position != "GK")
+
+    # Drop rows where the player's position is SUB or RES (NOTE: this takes out like 60% of the data.....)
+    df = df.filter(df.team_position != "SUB")
+    df = df.filter(df.team_position != "RES")
 
     # The following features will be dropped because their values are not numbers, their form is "92+3", "85+2", etc.
     # And also because these would probably give away the positions way to easily so it doesn't make sense to test based
@@ -55,6 +55,9 @@ def prepare_data():
     # Finally remove the following unneeded features from the previously selected columns
     df = df.drop("short_name", "player_positions", "overall", "team_jersey_number", "movement_reactions",
                  "mentality_aggression", "mentality_composure")
+
+    # Drop rows with any null values, we don't want sparse matrix
+    df = df.dropna()
 
     print("Number of columns: " + str(len(df.columns)))
     print("Number of rows: " + str(df.count()))

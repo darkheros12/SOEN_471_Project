@@ -15,7 +15,6 @@ def decision_tree(df, num_of_classes):
 
     # Note: The 'categoricalFeaturesInfo' parameter is a map to show the indexes that have categorical features (as
     # opposed to numerical) and how many categorical features
-    # todo: Change to rdd of LabeldPoint
     model = DecisionTree.trainClassifier(training_data.rdd, numClasses=num_of_classes, categoricalFeaturesInfo={}, impurity='entropy', maxDepth=5, maxBins=32)
 
     # todo: Is maxDepth=5 too low? Apparently maximum value for maxDepth is 30 in spark implementation
