@@ -1,9 +1,9 @@
 from pyspark.rdd import RDD
 from pyspark.sql import Row
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import desc, size, max, abs
+from pyspark.sql.functions import desc, size, max, abs, udf
 from pyspark.sql import SparkSession
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType, StringType
 
 
 # Initialize a spark session.
@@ -72,13 +72,25 @@ def prepare_data(filename):
     for feature in list_of_features:
         df = df.withColumn(feature, df[feature].cast(IntegerType()))  # Replace that column with int version of that col
 
-    # Normalizing
+    # Normalizing is being done below
     for feature in list_of_features:
         if feature != "overall":
             df = df.withColumn(feature, df[feature] / df["overall"] * 100.0)  # Normalize using their overall score
     # todo: Is this a good way of normalizing? Look for builtin functions perhaps
-
     df = df.drop("overall")
+
+    # Change the labels from values such as st, lw, rw, cdm, lm, lb, lwb, cb, to forward, midfielder, and defender
+    labels_dict = {'ST': 'Forward', 'CF': 'Forward', 'LF': 'Forward', 'RF': 'Forward', 'LS': 'Forward', 'RS': 'Forward',
+                   'LW': 'Forward', 'RW': 'Forward', 'CAM': 'Midfielder', 'LAM': 'Midfielder', 'RAM': 'Midfielder',
+                   'CM': 'Midfielder', 'LCM': 'Midfielder', 'RCM': 'Midfielder', 'LM': 'Midfielder', 'RM': 'Midfielder',
+                   'CDM': 'Midfielder', 'LDM': 'Midfielder', 'RDM': 'Midfielder', 'CB': 'Defender', 'LCB': 'Defender',
+                   'RCB': 'Defender', 'LB': 'Defender', 'RB': 'Defender', 'LWB': 'Defender', 'RWB': 'Defender'}
+
+    def get_label(position):
+        return labels_dict[position]
+
+    udf_column = udf(get_label, StringType())
+    df = df.withColumn("team_position", udf_column('team_position'))  # Change values to basic labels
 
     # Try with the following to see if results improve if we're getting very low results
     '''df = df.select("preferred_foot", "skill_moves", "team_position", "shooting", "passing", "dribbling", "defending",
