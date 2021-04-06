@@ -1,4 +1,4 @@
-from pyspark.ml.classification import DecisionTreeClassifier
+from pyspark.ml.classification import RandomForestClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
 
@@ -6,7 +6,7 @@ from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
 Parameters: 
 df: The dataframe
 '''
-def decision_tree(df):
+def random_forest(df):
     # Drop preferred_foot because it's the only categorical column, the others are all numerical
     # Use preferred_foot if we have time to implement it
     df = df.drop("preferred_foot")
@@ -20,12 +20,9 @@ def decision_tree(df):
 
     (training_data, testing_data) = df.randomSplit([0.8, 0.2])  # Split the training and testing data
 
-    d_tree = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", maxDepth=5)
-    model = d_tree.fit(training_data)
+    random_forest = RandomForestClassifier(labelCol="indexed_label", featuresCol="indexed_features", numTrees=10)
+    model = random_forest.fit(training_data)
 
-    # todo: Try with gini instead of entropy and compare
-
-    # Prediction happens here
     predictions = model.transform(testing_data)
 
     evaluator = MulticlassClassificationEvaluator(labelCol="indexed_label", predictionCol="prediction",

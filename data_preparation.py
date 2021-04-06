@@ -53,8 +53,14 @@ def prepare_data(filename):
     df = df.drop("ls", "st", "rs", "lw", "lf", "cf", "rf", "rw", "lam", "cam", "ram", "lm", "lcm", "cm", "rcm", "rm",
                  "lwb", "ldm", "cdm", "rdm", "rwb", "lb", "lcb", "cb", "rcb", "rb")
 
+    # The following are dropped because it's easy to see that these one are not very discriminative. Players in
+    # different positions could have same values for these attributes. This is part of features cleanup (less features =
+    # better prediction hopefully)
+    df = df.drop("pace", "physic", "skill_curve", "skill_ball_control", "movement_acceleration", "movement_sprint_speed",
+                 "movement_balance", "power_jumping", "power_stamina", "power_strength", "power_long_shots")
+
     # Finally remove the following unneeded features from the previously selected columns
-    df = df.drop("short_name", "player_positions", "overall", "team_jersey_number", "movement_reactions",
+    df = df.drop("short_name", "player_positions", "team_jersey_number", "movement_reactions",
                  "mentality_aggression", "mentality_composure")
 
     # Drop rows with any null values, we don't want sparse matrix
@@ -66,6 +72,18 @@ def prepare_data(filename):
     for feature in list_of_features:
         df = df.withColumn(feature, df[feature].cast(IntegerType()))  # Replace that column with int version of that col
 
+    # Normalizing
+    for feature in list_of_features:
+        if feature != "overall":
+            df = df.withColumn(feature, df[feature] / df["overall"] * 100.0)  # Normalize using their overall score
+    # todo: Is this a good way of normalizing? Look for builtin functions perhaps
+
+    df = df.drop("overall")
+
+    # Try with the following to see if results improve if we're getting very low results
+    '''df = df.select("preferred_foot", "skill_moves", "team_position", "shooting", "passing", "dribbling", "defending",
+                   "mentality_interceptions", "defending_standing_tackle", "defending_sliding_tackle")'''
+
     print("Number of columns: " + str(len(df.columns)))
     print("Number of rows: " + str(df.count()))
     # df.show(50)
@@ -74,4 +92,3 @@ def prepare_data(filename):
 
     # todo: Try also by changing classes to 'attack', 'midfield', 'defence', 'gk', instead of 'st', 'rw', 'lw', 'cdm'...
     # todo: Print a chart showing how many of each classes there are (attack, midfield, defence, etc.)
-    # todo: Normalize the ratings for each column?
