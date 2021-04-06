@@ -1,32 +1,34 @@
-from pyspark.mllib.tree import DecisionTree
-# todo: pyspark.ml better than pyspark.mllib?
+from pyspark.ml.classification import DecisionTreeClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
 
 '''
 Parameters: 
 df: The dataframe
 num_of_classes: The total number of distinct classes. I.e there are 28 of st, lw, rw, cdm, etc distinct classes
 '''
-def decision_tree(df, num_of_classes):
+def decision_tree(df):
+    # Drop preferred_foot because it's the only categorical column, the others are all numerical
     df = df.drop("preferred_foot")
 
-    # data_rdd = df.rdd # ?
+    labelIndexer = StringIndexer(inputCol="team_position", outputCol="indexed_label").fit(df)
+    df = labelIndexer.transform(df)
+
+    list_of_features = df.drop("team_position").drop("indexed_label").columns  # Get list of all features
+    assembler = VectorAssembler(inputCols=list_of_features, outputCol="indexed_Features")
+    df = assembler.transform(df)
 
     (training_data, testing_data) = df.randomSplit([0.8, 0.2])  # Split the training and testing data
 
-    # Note: The 'categoricalFeaturesInfo' parameter is a map to show the indexes that have categorical features (as
-    # opposed to numerical) and how many categorical features
-    model = DecisionTree.trainClassifier(training_data.rdd, numClasses=num_of_classes, categoricalFeaturesInfo={}, impurity='entropy', maxDepth=5, maxBins=32)
+    dt = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_Features", impurity="entropy", maxDepth=5)
+    model = dt.fit(training_data)
 
-    # todo: Is maxDepth=5 too low? Apparently maximum value for maxDepth is 30 in spark implementation
     # todo: Try with gini instead of entropy and compare
 
     # Prediction happens here
-    predictions = model.predict(testing_data.drop("team_position").rdd)
+    predictions = model.transform(testing_data)
 
-    # Zip the actual values and predicted values together for comparison
-    labelsAndPredictions = testing_data.rdd.map(lambda row: row.team_position).zip(predictions)
-
-    testErr = labelsAndPredictions.filter(lambda row: row[0] != row[1]).count() / float(testing_data.count())
-    print('Test Error = ' + str(testErr))
-    print('Learned classification tree model:')
-    print(model.toDebugString())
+    evaluator = MulticlassClassificationEvaluator(labelCol="indexed_label", predictionCol="prediction",
+                                                  metricName="accuracy")
+    accuracy = evaluator.evaluate(predictions)
+    print("Accuracy = " + str(accuracy))

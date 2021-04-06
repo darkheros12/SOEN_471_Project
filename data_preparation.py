@@ -3,6 +3,7 @@ from pyspark.sql import Row
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import desc, size, max, abs
 from pyspark.sql import SparkSession
+from pyspark.sql.types import IntegerType
 
 
 # Initialize a spark session.
@@ -58,6 +59,12 @@ def prepare_data(filename):
 
     # Drop rows with any null values, we don't want sparse matrix
     df = df.dropna()
+
+    # Here we turn all values to IntegerType because for some reason they are represented as string even though they are
+    # numerical (except team_position which is the label/class, and preferred_foot because it's either 'right' or 'left'
+    list_of_features = df.drop("team_position").drop("preferred_foot").columns  # Get list of all features that should be numerical
+    for feature in list_of_features:
+        df = df.withColumn(feature, df[feature].cast(IntegerType()))  # Replace that column with int version of that col
 
     print("Number of columns: " + str(len(df.columns)))
     print("Number of rows: " + str(df.count()))
