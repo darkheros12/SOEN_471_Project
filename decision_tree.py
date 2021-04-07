@@ -6,7 +6,7 @@ from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
 Parameters: 
 df: The dataframe
 '''
-def decision_tree(df):
+def decision_tree(df, seed):
     # Drop preferred_foot because it's the only categorical column, the others are all numerical
     # Use preferred_foot if we have time to implement it
     df = df.drop("preferred_foot")
@@ -18,7 +18,7 @@ def decision_tree(df):
     assembler = VectorAssembler(inputCols=list_of_features, outputCol="indexed_features")
     df = assembler.transform(df)
 
-    (training_data, testing_data) = df.randomSplit([0.8, 0.2])  # Split the training and testing data
+    (training_data, testing_data) = df.randomSplit([0.8, 0.2], seed)  # Split the training and testing data
 
     d_tree = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", maxDepth=5)
     model = d_tree.fit(training_data)
