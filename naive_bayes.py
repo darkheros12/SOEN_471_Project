@@ -6,7 +6,7 @@ from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
 Parameters: 
 df: The dataframe
 '''
-def naive_bayes(df):
+def naive_bayes(df, seed):
     # Drop preferred_foot because it's the only categorical column, the others are all numerical
     # Use preferred_foot if we have time to implement it
     df = df.drop("preferred_foot")
@@ -19,9 +19,7 @@ def naive_bayes(df):
     assembler = VectorAssembler(inputCols=list_of_features, outputCol="features")
     df = assembler.transform(df)
 
-    splits = df.randomSplit([0.8, 0.2])
-    train_data = splits[0]
-    test_data = splits[1]
+    (train_data, test_data) = df.randomSplit([0.8, 0.2], seed)
 
     n_bayes = NaiveBayes(smoothing=1.0, modelType="multinomial")
 
