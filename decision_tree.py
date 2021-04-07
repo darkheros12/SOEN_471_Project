@@ -1,6 +1,7 @@
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
+from sklearn.metrics import classification_report, confusion_matrix
 
 '''
 Parameters: 
@@ -31,4 +32,12 @@ def decision_tree(df, seed):
     evaluator = MulticlassClassificationEvaluator(labelCol="indexed_label", predictionCol="prediction",
                                                   metricName="accuracy")
     accuracy = evaluator.evaluate(predictions)
+
+    y_true = predictions.select(['indexed_label']).collect()
+    y_pred = predictions.select(['prediction']).collect()
+
+    print("Classification report and confusion matrix for Decision Tree:")
+    print(classification_report(y_true, y_pred))
+    print(confusion_matrix(y_true, y_pred))
+
     return accuracy

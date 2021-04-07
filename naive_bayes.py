@@ -1,6 +1,7 @@
 from pyspark.ml.classification import NaiveBayes
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
+from sklearn.metrics import classification_report, confusion_matrix
 
 '''
 Parameters: 
@@ -30,5 +31,12 @@ def naive_bayes(df, seed):
     evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction",
                                                   metricName="accuracy")
     accuracy = evaluator.evaluate(predictions)
+
+    y_true = predictions.select(['label']).collect()
+    y_pred = predictions.select(['prediction']).collect()
+
+    print("Classification report and confusion matrix for Naive Bayes:")
+    print(classification_report(y_true, y_pred))
+    print(confusion_matrix(y_true, y_pred))
 
     return accuracy
