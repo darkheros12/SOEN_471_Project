@@ -5,6 +5,9 @@ from pyspark.sql.functions import desc, size, max, abs, udf
 from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType, StringType
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 # Initialize a spark session.
 def init_spark():
@@ -98,6 +101,22 @@ def prepare_data(filename):
 
     print("Number of columns: " + str(len(df.columns)))
     print("Number of rows: " + str(df.count()))
+
+    forward = df.filter(df.team_position == "Forward").count()
+    print(forward)
+    defender = df.filter(df.team_position == "Defender").count()
+    print(defender)
+    midfielder = df.filter(df.team_position == "Midfielder").count()
+    print(midfielder)
+
+    mylabel = ["Forward", "Defender", "Midfielder"]
+
+    total = df.count()
+
+
+    y = np.array([(forward / total)*100, (defender / total)*100, (midfielder / total)*100])
+    plt.pie(y, labels= mylabel, autopct='%1.2f')
+    plt.show()
     # df.show(50)
 
     return df
