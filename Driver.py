@@ -7,7 +7,7 @@ import kNN
 def main():
     df = data_preparation.prepare_data("players_21.csv")
 
-    seed = 500
+    seed = 10
 
     dt_accuracy = decision_tree.decision_tree(df, seed)
     print("Decision Tree Accuracy = " + str(dt_accuracy))
