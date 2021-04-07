@@ -18,7 +18,7 @@ def k_nearest_neighbors(df, seed):
     x_test = test_data.drop("team_position").collect()
     y_test = test_data.select("team_position").rdd.map(lambda row: row[0]).collect()
 
-    neighbors = KNeighborsClassifier(n_neighbors=3)
+    neighbors = KNeighborsClassifier(n_neighbors=50)
     neighbors.fit(x_train, y_train)
     prediction_labels = neighbors.predict(x_test)
     accuracy = neighbors.score(x_test, y_test)
