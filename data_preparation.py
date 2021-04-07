@@ -1,9 +1,10 @@
 from pyspark.rdd import RDD
 from pyspark.sql import Row
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import desc, size, max, abs, udf
+from pyspark.sql.functions import desc, size, max, abs, udf, col
 from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType, StringType
+from imblearn.over_sampling import SMOTE
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -101,22 +102,56 @@ def prepare_data(filename):
 
     print("Number of columns: " + str(len(df.columns)))
     print("Number of rows: " + str(df.count()))
+    print("")
 
     forward = df.filter(df.team_position == "Forward").count()
-    print(forward)
-    defender = df.filter(df.team_position == "Defender").count()
-    print(defender)
+    print("Number of forwards: " + str(forward))
     midfielder = df.filter(df.team_position == "Midfielder").count()
-    print(midfielder)
-
-    mylabel = ["Forward", "Defender", "Midfielder"]
+    print("Number of midfielders: " + str(midfielder))
+    defender = df.filter(df.team_position == "Defender").count()
+    print("Number of defenders: " + str(defender))
 
     total = df.count()
+    print("Total number of entries: " + str(total))
 
+    mylabel = ["Forward", "Defender", "Midfielder"]
 
     y = np.array([(forward / total)*100, (defender / total)*100, (midfielder / total)*100])
     plt.pie(y, labels= mylabel, autopct='%1.2f')
     plt.show()
+
+    sm = SMOTE(random_state=42)
+
+    list_of_features = df.drop("team_position").drop("preferred_foot").columns
+    X_features = df.drop("team_position").drop("preferred_foot").collect()
+    Y_label = df.select("team_position").collect()
+
+    X_sm, y_sm = sm.fit_resample(X_features, Y_label)
+
+    i = 0
+    for row in X_sm:
+        row.append(y_sm[i])
+        i += 1
+
+    list_of_features.append("team_position")
+    df = spark.createDataFrame(data=X_sm, schema=list_of_features)
+
+    forward = df.filter(df.team_position == "Forward").count()
+    print("Number of forwards: " + str(forward))
+    midfielder = df.filter(df.team_position == "Midfielder").count()
+    print("Number of midfielders: " + str(midfielder))
+    defender = df.filter(df.team_position == "Defender").count()
+    print("Number of defenders: " + str(defender))
+
+    total = df.count()
+    print("Total number of entries: " + str(total))
+
+    mylabel = ["Forward", "Defender", "Midfielder"]
+
+    y = np.array([(forward / total) * 100, (defender / total) * 100, (midfielder / total) * 100])
+    plt.pie(y, labels=mylabel, autopct='%1.2f')
+    plt.show()
+
     # df.show(50)
 
     return df
