@@ -37,6 +37,12 @@ def naive_bayes(df, seed):
 
     print("Classification report and confusion matrix for Naive Bayes:")
     print(classification_report(y_true, y_pred))
-    print(confusion_matrix(y_true, y_pred))
+    cm = confusion_matrix(y_true, y_pred)
+    confusion_matrix_corrected = [[cm[1][1], cm[1][2], cm[1][0]], [cm[2][1], cm[2][2], cm[2][0]],
+                                  [cm[0][1], cm[0][2], cm[0][0]]]
+    print("")
+    print(confusion_matrix_corrected[0])
+    print(confusion_matrix_corrected[1])
+    print(confusion_matrix_corrected[2])
 
     return accuracy

@@ -20,11 +20,18 @@ def init_spark():
     return spark
 
 
-def prepare_data(filename):
+def prepare_data(files):
     spark = init_spark()
 
     # Read the csv files, this df will contain all  ~106 features
-    df = spark.read.csv(filename, header=True)
+    df = None
+    for file in files:
+        if df is None:
+            df = spark.read.csv(file, header=True)
+            print(df.count())
+        else:
+            df = spark.read.csv(file, header=True).union(df)
+            print(df.count())
 
     # Filtering the data (as seen below) will be done in multiple steps for better readability and understandability
 
@@ -80,7 +87,6 @@ def prepare_data(filename):
     for feature in list_of_features:
         if feature != "overall":
             df = df.withColumn(feature, df[feature] / df["overall"] * 100.0)  # Normalize using their overall score
-    # todo: Is this a good way of normalizing? Look for builtin functions perhaps
     df = df.drop("overall")
 
     # Change the labels from values such as st, lw, rw, cdm, lm, lb, lwb, cb, to forward, midfielder, and defender
@@ -96,30 +102,13 @@ def prepare_data(filename):
     udf_column = udf(get_label, StringType())
     df = df.withColumn("team_position", udf_column('team_position'))  # Change values to basic labels
 
-    # Try with the following to see if results improve if we're getting very low results
-    '''df = df.select("preferred_foot", "skill_moves", "team_position", "shooting", "passing", "dribbling", "defending",
-                   "mentality_interceptions", "defending_standing_tackle", "defending_sliding_tackle")'''
-
     print("Number of columns: " + str(len(df.columns)))
     print("Number of rows: " + str(df.count()))
     print("")
 
-    forward = df.filter(df.team_position == "Forward").count()
-    print("Number of forwards: " + str(forward))
-    midfielder = df.filter(df.team_position == "Midfielder").count()
-    print("Number of midfielders: " + str(midfielder))
-    defender = df.filter(df.team_position == "Defender").count()
-    print("Number of defenders: " + str(defender))
+    # printClassCount(df)
 
-    total = df.count()
-    print("Total number of entries: " + str(total))
-
-    mylabel = ["Forward", "Defender", "Midfielder"]
-
-    y = np.array([(forward / total)*100, (defender / total)*100, (midfielder / total)*100])
-    plt.pie(y, labels= mylabel, autopct='%1.2f')
-    plt.show()
-
+    # ----------------------------------------------- Apply SMOTE ------------------------------------------------------
     sm = SMOTE(random_state=42)
 
     list_of_features = df.drop("team_position").drop("preferred_foot").columns
@@ -136,6 +125,17 @@ def prepare_data(filename):
     list_of_features.append("team_position")
     df = spark.createDataFrame(data=X_sm, schema=list_of_features)
 
+    # ------------------------------------------------------------------------------------------------------------------
+
+    # printClassCount(df)
+
+    # df.show(50)
+
+    return df
+
+    # todo: Try also by changing classes to 'attack', 'midfield', 'defence', 'gk', instead of 'st', 'rw', 'lw', 'cdm'...
+
+def printClassCount(df):
     forward = df.filter(df.team_position == "Forward").count()
     print("Number of forwards: " + str(forward))
     midfielder = df.filter(df.team_position == "Midfielder").count()
@@ -151,10 +151,3 @@ def prepare_data(filename):
     y = np.array([(forward / total) * 100, (defender / total) * 100, (midfielder / total) * 100])
     plt.pie(y, labels=mylabel, autopct='%1.2f')
     plt.show()
-
-    # df.show(50)
-
-    return df
-
-    # todo: Try also by changing classes to 'attack', 'midfield', 'defence', 'gk', instead of 'st', 'rw', 'lw', 'cdm'...
-    # todo: Print a chart showing how many of each classes there are (attack, midfield, defence, etc.)
