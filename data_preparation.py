@@ -149,5 +149,5 @@ def printClassCount(df):
     mylabel = ["Forward", "Defender", "Midfielder"]
 
     y = np.array([(forward / total) * 100, (defender / total) * 100, (midfielder / total) * 100])
-    plt.pie(y, labels=mylabel, autopct='%1.2f')
+    plt.pie(y, labels=mylabel, autopct='%1.2f', textprops={'fontsize': 30})
     plt.show()

@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 Parameters: 
 df: The dataframe
 '''
-def decision_tree(df, seed, max_depth, impurity):
+def decision_tree(df, seed, max_depth):
     # Drop preferred_foot because it's the only categorical column, the others are all numerical
     # Use preferred_foot if we have time to implement it
     df = df.drop("preferred_foot")
@@ -22,10 +22,8 @@ def decision_tree(df, seed, max_depth, impurity):
 
     (training_data, testing_data) = df.randomSplit([0.8, 0.2], seed)  # Split the training and testing data
 
-    d_tree = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity=impurity, maxDepth=max_depth)
+    d_tree = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", maxDepth=max_depth)
     model = d_tree.fit(training_data)
-
-    # todo: Try with gini instead of entropy and compare
 
     # Prediction happens here
     predictions = model.transform(testing_data)

@@ -7,16 +7,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def main():
-    df = data_preparation.prepare_data(["players_15.csv", "players_16.csv", "players_17.csv", "players_18.csv",
-                                        "players_19.csv", "players_20.csv", "players_21.csv"])
+    df = data_preparation.prepare_data(["Data/players_15.csv", "Data/players_16.csv", "Data/players_17.csv",
+                                        "Data/players_18.csv", "Data/players_19.csv", "Data/players_20.csv",
+                                        "Data/players_21.csv"])
 
     seed = 10
 
     dt_accuracy1 = decision_tree.decision_tree(df, seed, max_depth=5)
-    dt_accuracy2 = decision_tree.decision_tree(df, seed, max_depth=25)
-    dt_accuracy3 = decision_tree.decision_tree(df, seed, max_depth=30)
-    # ("Decision Tree Accuracy = " + str(dt_accuracy))
-    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", [dt_accuracy1, dt_accuracy2, dt_accuracy3], [5, 25, 30])
+    dt_accuracy2 = decision_tree.decision_tree(df, seed, max_depth=6)
+    dt_accuracy3 = decision_tree.decision_tree(df, seed, max_depth=7)
+    dt_accuracy4 = decision_tree.decision_tree(df, seed, max_depth=8)
+    dt_accuracy5 = decision_tree.decision_tree(df, seed, max_depth=10)
+    dt_accuracy6 = decision_tree.decision_tree(df, seed, max_depth=21)  # 21 is the amount of features we have
+    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", [dt_accuracy1, dt_accuracy2, dt_accuracy3,
+                                                                      dt_accuracy4, dt_accuracy5, dt_accuracy6], [5, 6, 7, 8, 10, 21])
 
     rf_accuracy = random_forest.random_forest(df, seed, num_of_trees=10)
     print("Random Forest Accuracy = " + str(rf_accuracy))
@@ -26,6 +30,7 @@ def main():
 
     kNN_accuracy = kNN.k_nearest_neighbors(df, seed, neighbors=50)
     print("K Nearest Neighbors Accuracy = " + str(kNN_accuracy))
+
 
 #This function will create a bar plot for each list given to it
 def plot_bar_accuracy(title, x_label, y_label, data, label):
