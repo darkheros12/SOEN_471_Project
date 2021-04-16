@@ -13,11 +13,11 @@ def main():
 
     seed = 10
 
-    max_depth_list = [5, 7, 9, 10, 12, 14]
+    '''max_depth_list = [3, 5, 10, 12]
     dt_accuracy_list = decision_tree.decision_tree(df, seed, max_depth_list=max_depth_list)
-    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", dt_accuracy_list, max_depth_list)
+    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", dt_accuracy_list, max_depth_list)'''
 
-    num_of_trees_list = [10]
+    num_of_trees_list = [10, 15, 20, 25, 30, 35]
     rf_accuracy_list = random_forest.random_forest(df, seed, num_of_trees_list=num_of_trees_list)
     plot_bar_accuracy("Random Forest Accuracy", "Trees", "Accuracy", rf_accuracy_list, num_of_trees_list)
 

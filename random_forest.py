@@ -26,7 +26,7 @@ def random_forest(df, seed, num_of_trees_list):
 
     accuracy_list = []
     for num_of_trees in num_of_trees_list:
-        random_forest = RandomForestClassifier(labelCol="indexed_label", featuresCol="indexed_features", numTrees=num_of_trees)
+        random_forest = RandomForestClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", numTrees=num_of_trees, maxDepth=10)
         model = random_forest.fit(training_data)
 
         predictions = model.transform(testing_data)
