@@ -6,8 +6,10 @@ from sklearn.metrics import classification_report, confusion_matrix
 '''
 Parameters: 
 df: The dataframe
+seed: Used for randomSplit
+max_depth_list: List of the different maxDepth parameter we want to try out
 '''
-def decision_tree(df, seed, max_depth):
+def decision_tree(df, seed, max_depth_list):
     # Drop preferred_foot because it's the only categorical column, the others are all numerical
     # Use preferred_foot if we have time to implement it
     df = df.drop("preferred_foot")
@@ -22,27 +24,30 @@ def decision_tree(df, seed, max_depth):
 
     (training_data, testing_data) = df.randomSplit([0.8, 0.2], seed)  # Split the training and testing data
 
-    d_tree = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", maxDepth=max_depth)
-    model = d_tree.fit(training_data)
+    accuracy_list = []
+    for max_depth in max_depth_list:
+        d_tree = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", maxDepth=max_depth)
+        model = d_tree.fit(training_data)
 
-    # Prediction happens here
-    predictions = model.transform(testing_data)
+        # Prediction happens here
+        predictions = model.transform(testing_data)
 
-    evaluator = MulticlassClassificationEvaluator(labelCol="indexed_label", predictionCol="prediction",
+        evaluator = MulticlassClassificationEvaluator(labelCol="indexed_label", predictionCol="prediction",
                                                   metricName="accuracy")
-    accuracy = evaluator.evaluate(predictions)
+        accuracy = evaluator.evaluate(predictions)
+        accuracy_list.append(accuracy)
 
-    y_true = predictions.select(['indexed_label']).collect()
-    y_pred = predictions.select(['prediction']).collect()
+        '''y_true = predictions.select(['indexed_label']).collect()
+        y_pred = predictions.select(['prediction']).collect()
+    
+        print("Classification report and confusion matrix for Decision Tree with max depth " + str(max_depth) + ":")
+        print(classification_report(y_true, y_pred))
+        cm = confusion_matrix(y_true, y_pred)
+        confusion_matrix_corrected = [[cm[1][1], cm[1][2], cm[1][0]], [cm[2][1], cm[2][2], cm[2][0]],
+                                      [cm[0][1], cm[0][2], cm[0][0]]]
+        print("")
+        print(confusion_matrix_corrected[0])
+        print(confusion_matrix_corrected[1])
+        print(confusion_matrix_corrected[2])'''
 
-    print("Classification report and confusion matrix for Decision Tree with max depth " + str(max_depth) + ":")
-    print(classification_report(y_true, y_pred))
-    cm = confusion_matrix(y_true, y_pred)
-    confusion_matrix_corrected = [[cm[1][1], cm[1][2], cm[1][0]], [cm[2][1], cm[2][2], cm[2][0]],
-                                  [cm[0][1], cm[0][2], cm[0][0]]]
-    print("")
-    print(confusion_matrix_corrected[0])
-    print(confusion_matrix_corrected[1])
-    print(confusion_matrix_corrected[2])
-
-    return accuracy
+    return accuracy_list

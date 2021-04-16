@@ -28,10 +28,8 @@ def prepare_data(files):
     for file in files:
         if df is None:
             df = spark.read.csv(file, header=True)
-            print(df.count())
         else:
             df = spark.read.csv(file, header=True).union(df)
-            print(df.count())
 
     # Filtering the data (as seen below) will be done in multiple steps for better readability and understandability
 

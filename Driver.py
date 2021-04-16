@@ -13,26 +13,23 @@ def main():
 
     seed = 10
 
-    dt_accuracy1 = decision_tree.decision_tree(df, seed, max_depth=5)
-    dt_accuracy2 = decision_tree.decision_tree(df, seed, max_depth=6)
-    dt_accuracy3 = decision_tree.decision_tree(df, seed, max_depth=7)
-    dt_accuracy4 = decision_tree.decision_tree(df, seed, max_depth=8)
-    dt_accuracy5 = decision_tree.decision_tree(df, seed, max_depth=10)
-    dt_accuracy6 = decision_tree.decision_tree(df, seed, max_depth=21)  # 21 is the amount of features we have
-    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", [dt_accuracy1, dt_accuracy2, dt_accuracy3,
-                                                                      dt_accuracy4, dt_accuracy5, dt_accuracy6], [5, 6, 7, 8, 10, 21])
+    max_depth_list = [5, 7, 9, 10, 12, 14]
+    dt_accuracy_list = decision_tree.decision_tree(df, seed, max_depth_list=max_depth_list)
+    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", dt_accuracy_list, max_depth_list)
 
-    rf_accuracy = random_forest.random_forest(df, seed, num_of_trees=10)
-    print("Random Forest Accuracy = " + str(rf_accuracy))
+    num_of_trees_list = [10]
+    rf_accuracy_list = random_forest.random_forest(df, seed, num_of_trees_list=num_of_trees_list)
+    plot_bar_accuracy("Random Forest Accuracy", "Trees", "Accuracy", rf_accuracy_list, num_of_trees_list)
 
     nb_accuracy = naive_bayes.naive_bayes(df, seed)
-    print("Naive Bayes Accuracy = " + str(nb_accuracy))
+    plot_bar_accuracy("Naive Bayes Accuracy", "Smoothing", "Accuracy", [nb_accuracy], [1.0])
 
-    kNN_accuracy = kNN.k_nearest_neighbors(df, seed, neighbors=50)
-    print("K Nearest Neighbors Accuracy = " + str(kNN_accuracy))
+    neighbors_list = [50]
+    kNN_accuracy_list = kNN.k_nearest_neighbors(df, seed, neighbors_list=neighbors_list)
+    plot_bar_accuracy("K Nearest Neighbors Accuracy", "Neighbors", "Accuracy", kNN_accuracy_list, neighbors_list)
 
 
-#This function will create a bar plot for each list given to it
+# This function will create a bar plot for each list given to it
 def plot_bar_accuracy(title, x_label, y_label, data, label):
     # this is for plotting purpose
     index = np.arange(len(label))
@@ -43,7 +40,7 @@ def plot_bar_accuracy(title, x_label, y_label, data, label):
     plt.xticks(index, label, fontsize=20, rotation=30)
     plt.title(title, fontsize=20)
     for index, value in enumerate(data):
-        plt.text(index, value, str(value), fontsize=15)
+        plt.text(index, value, str(value), fontsize=8)
     plt.show()
 
 

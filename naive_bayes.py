@@ -6,6 +6,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 '''
 Parameters: 
 df: The dataframe
+seed: Used for randomSplit
 '''
 def naive_bayes(df, seed):
     # Drop preferred_foot because it's the only categorical column, the others are all numerical
