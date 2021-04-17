@@ -131,8 +131,6 @@ def prepare_data(files):
 
     return df
 
-    # todo: Try also by changing classes to 'attack', 'midfield', 'defence', 'gk', instead of 'st', 'rw', 'lw', 'cdm'...
-
 def printClassCount(df):
     forward = df.filter(df.team_position == "Forward").count()
     print("Number of forwards: " + str(forward))

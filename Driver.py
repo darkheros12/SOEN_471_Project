@@ -13,20 +13,22 @@ def main():
 
     seed = 10
 
-    '''max_depth_list = [3, 5, 10, 12]
+    max_depth_list = [5, 7, 9, 10, 12, 14]
     dt_accuracy_list = decision_tree.decision_tree(df, seed, max_depth_list=max_depth_list)
-    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", dt_accuracy_list, max_depth_list)'''
+    plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", dt_accuracy_list, max_depth_list)
 
-    num_of_trees_list = [10, 15, 20, 25, 30, 35]
+    '''num_of_trees_list = [10, 15, 20, 25, 30, 35]
     rf_accuracy_list = random_forest.random_forest(df, seed, num_of_trees_list=num_of_trees_list)
-    plot_bar_accuracy("Random Forest Accuracy", "Trees", "Accuracy", rf_accuracy_list, num_of_trees_list)
+    plot_bar_accuracy("Random Forest Accuracy", "Trees", "Accuracy", rf_accuracy_list, num_of_trees_list)'''
 
-    nb_accuracy = naive_bayes.naive_bayes(df, seed)
-    plot_bar_accuracy("Naive Bayes Accuracy", "Smoothing", "Accuracy", [nb_accuracy], [1.0])
+    '''nb_accuracy = naive_bayes.naive_bayes(df, seed)
+    plot_bar_accuracy("Naive Bayes Accuracy", "Smoothing", "Accuracy", [0, 0, nb_accuracy, 0, 0], ["", "", 1.0, "", ""])'''
 
-    neighbors_list = [50]
+    '''neighbors_list = [10, 15, 25, 150, 210, 250, 300]
     kNN_accuracy_list = kNN.k_nearest_neighbors(df, seed, neighbors_list=neighbors_list)
-    plot_bar_accuracy("K Nearest Neighbors Accuracy", "Neighbors", "Accuracy", kNN_accuracy_list, neighbors_list)
+    plot_bar_accuracy("K Nearest Neighbors Accuracy", "Neighbors", "Accuracy", kNN_accuracy_list, neighbors_list)'''
+
+    print("")
 
 
 # This function will create a bar plot for each list given to it
@@ -40,7 +42,7 @@ def plot_bar_accuracy(title, x_label, y_label, data, label):
     plt.xticks(index, label, fontsize=20, rotation=30)
     plt.title(title, fontsize=20)
     for index, value in enumerate(data):
-        plt.text(index, value, str(value), fontsize=8)
+        plt.text(index, value, "{0:.4f}".format(value), fontsize=10)
     plt.show()
 
 
