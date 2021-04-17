@@ -23,4 +23,17 @@ Multiple techniques will be used to achieve the objective. The algorithms that w
 
 Finally, most of our work will be done using Apache Spark and our data will be stored in a spark dataframe. While PyCharm will be our main IDE, Jupyter Notebook will also be used to help visualize our results better.
 
+***
+
+## Discussions
+
+The purpose of this project is to determine the position of any players based on their statistic. As a secondary objective, we want to know which algorithms is better based on the dataset. The predicted position was narrow down to a few general positions for simpler classification. The positions are defender, midfielder, and attacker. As a result, we found out that most of our algorithms have a prediction accuracy of 82.78% and over regardless of the parameters. However, only the Naives Bayes has a 76.85% accuracy which is reasonable as the algorithms is very bias toward features independence assumption. The highest prediction accuracy is 86.75% by Random Forest Algorithm at 15 tries. Very close behind is k Nearest Neighbors with 10 neighbors, it has an accuracy of 86.73%. As the last place is Decision Tree with a max Depth of 10, it has an accuracy of 84.86%.
+
+### Limitations
+
+Some of the limitation was the preprocessing data. We had to filter most features.  
+
+
+
+
 https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset
