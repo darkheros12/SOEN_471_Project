@@ -63,7 +63,7 @@ After SMOTE:
    Figure 2. Class representation after SMOTE
 </p>
 
-Our final dataset contains a total of 55,653 entries with 21 features as shown below:
+Our final dataset contains a total of 55,653 entries with 21 features as seen in the sample shown below:
 
 |       skill_moves|          shooting|           passing|         dribbling|        defending|attacking_crossing|attacking_finishing|attacking_heading_accuracy|attacking_short_passing|attacking_volleys|   skill_dribbling|skill_fk_accuracy|skill_long_passing| movement_agility|  power_shot_power|mentality_interceptions|mentality_positioning|  mentality_vision|mentality_penalties|defending_standing_tackle|defending_sliding_tackle|team_position|
 |------------------|------------------|------------------|------------------|-----------------|------------------|-------------------|--------------------------|-----------------------|-----------------|------------------|-----------------|------------------|-----------------|------------------|-----------------------|---------------------|------------------|-------------------|-------------------------|------------------------|-------------|
