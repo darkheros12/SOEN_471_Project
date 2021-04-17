@@ -25,19 +25,6 @@ Finally, most of our work will be done using Apache Spark and our data will be s
 
 ***
 
-## Discussions
-
-The purpose of this project is to determine the position of any players based on their statistic. As a secondary objective, we want to know which algorithms is better based on the dataset. The predicted position was narrow down to a few general positions for simpler classification. The positions are defender, midfielder, and attacker. As a result, we found out that most of our algorithms have a prediction accuracy of 82.78% and over regardless of the parameters. However, only the Naives Bayes has a 76.85% accuracy which is reasonable as the algorithms is very bias toward features independence assumption. The highest prediction accuracy is 86.75% by Random Forest Algorithm at 15 tries. Very close behind is k Nearest Neighbors with 10 neighbors, it has an accuracy of 86.73%. As the last place is Decision Tree with a max Depth of 10, it has an accuracy of 84.86%.
-
-### Limitations
-
-Some of the limitation was the preprocessing data. We had to filter most features.  
-
-
-
-
-https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset
-
 ## Results
 ### Data Preparation
 
@@ -157,3 +144,18 @@ We have tested our kNN algorithm with varying number of neighbors.
 </p>
 
 Our kNN algorithms have an average of 85.62% with a minimum of 84.81% and maximum of 86.73%. While the different test runs did yield relatively similar results, it is very interesting to note that the accuracy of the model seem to be going down with increasing number of neighbors. This was surprising as it went against our expectation. With the popular theory of the most optimal k being the square root of the number of data points, our best accuracy should be with k equal to 210. However, our results suggest that the lower the value of k, the better the result. One possible explanation could be that even within a certain class, our data points are far apart, meaning that, for example, some forwards are further apart from each other than they are to some midfielders.
+
+***
+
+## Discussions
+
+The purpose of this project is to determine the position of any players based on their statistic. As a secondary objective, we want to know which algorithms is better based on the dataset. The predicted position was narrow down to a few general positions for simpler classification. The positions are defender, midfielder, and attacker. As a result, we found out that most of our algorithms have a prediction accuracy of 82.78% and over regardless of the parameters. However, only the Naives Bayes has a 76.85% accuracy which is reasonable as the algorithms is very bias toward features independence assumption. The highest prediction accuracy is 86.75% by Random Forest Algorithm at 15 tries. Very close behind is k Nearest Neighbors with 10 neighbors, it has an accuracy of 86.73%. As the last place is Decision Tree with a max Depth of 10, it has an accuracy of 84.86%.
+
+### Limitations
+
+Some of the limitation was the preprocessing data. We had to filter most features.  
+
+
+
+
+https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset
