@@ -2,6 +2,7 @@ from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
 from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
 
 '''
 Parameters: 
@@ -25,6 +26,7 @@ def decision_tree(df, seed, max_depth_list):
     (training_data, testing_data) = df.randomSplit([0.8, 0.2], seed)  # Split the training and testing data
 
     accuracy_list = []
+    cm_list = []  # List of confusion matrices
     for max_depth in max_depth_list:
         d_tree = DecisionTreeClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", maxDepth=max_depth)
         model = d_tree.fit(training_data)
@@ -37,7 +39,7 @@ def decision_tree(df, seed, max_depth_list):
         accuracy = evaluator.evaluate(predictions)
         accuracy_list.append(accuracy)
 
-        '''y_true = predictions.select(['indexed_label']).collect()
+        y_true = predictions.select(['indexed_label']).collect()
         y_pred = predictions.select(['prediction']).collect()
     
         print("Classification report and confusion matrix for Decision Tree with max depth " + str(max_depth) + ":")
@@ -48,6 +50,8 @@ def decision_tree(df, seed, max_depth_list):
         print("")
         print(confusion_matrix_corrected[0])
         print(confusion_matrix_corrected[1])
-        print(confusion_matrix_corrected[2])'''
+        print(confusion_matrix_corrected[2])
 
-    return accuracy_list
+        cm_list.append(np.array([confusion_matrix_corrected[0], confusion_matrix_corrected[1], confusion_matrix_corrected[2]]))
+
+    return accuracy_list, cm_list

@@ -1,6 +1,7 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
 
 '''
 Parameters: 
@@ -21,6 +22,7 @@ def k_nearest_neighbors(df, seed, neighbors_list):
     y_test = test_data.select("team_position").rdd.map(lambda row: row[0]).collect()
 
     accuracy_list = []
+    cm_list = []  # List of confusion matrices
     for neighbors in neighbors_list:
         neighbors = KNeighborsClassifier(n_neighbors=neighbors)
         neighbors.fit(x_train, y_train)
@@ -28,7 +30,7 @@ def k_nearest_neighbors(df, seed, neighbors_list):
         accuracy = neighbors.score(x_test, y_test)
         accuracy_list.append(accuracy)
 
-        '''print("Classification report and confusion matrix for kNN with " + str(neighbors) + " neighbors:")
+        print("Classification report and confusion matrix for kNN with " + str(neighbors) + " neighbors:")
         print(classification_report(y_test, prediction_labels))
         cm = confusion_matrix(y_test, prediction_labels)
         # print(cm)
@@ -37,6 +39,8 @@ def k_nearest_neighbors(df, seed, neighbors_list):
         print("")
         print(confusion_matrix_corrected[0])
         print(confusion_matrix_corrected[1])
-        print(confusion_matrix_corrected[2])'''
+        print(confusion_matrix_corrected[2])
 
-    return accuracy_list
+        cm_list.append(np.array([confusion_matrix_corrected[0], confusion_matrix_corrected[1], confusion_matrix_corrected[2]]))
+
+    return accuracy_list, cm_list

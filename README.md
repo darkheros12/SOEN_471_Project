@@ -53,14 +53,14 @@ Before SMOTE:
 
 <div align="center"><img src="Charts/before_smote.png"/></div>
 <p align="center">
-   Figure 1. categorical features
+   Figure 1. Class representation before SMOTE
 </p>
 
 After SMOTE:
 
 <div align="center"><img src="Charts/after_smote.png"/></div>
 <p align="center">
-   Figure 1. categorical features
+   Figure 2. Class representation after SMOTE
 </p>
 
 Our final dataset contains a total of 55,653 entries with 21 features as shown below:
@@ -72,3 +72,75 @@ Our final dataset contains a total of 55,653 entries with 21 features as shown b
 | 4.395604395604396|             100.0| 85.71428571428571|  93.4065934065934|47.25274725274725| 78.02197802197803| 103.29670329670331|          93.4065934065934|       92.3076923076923| 97.8021978021978|  93.4065934065934| 93.4065934065934| 76.92307692307693|84.61538461538461|  97.8021978021978|      53.84615384615385|   103.29670329670331| 86.81318681318682|   96.7032967032967|        46.15384615384615|       20.87912087912088|      Forward|
 |5.4945054945054945|  93.4065934065934|  94.5054945054945|103.29670329670331|39.56043956043956|  93.4065934065934|   95.6043956043956|         68.13186813186813|       95.6043956043956| 95.6043956043956|104.39560439560441| 97.8021978021978| 89.01098901098901|105.4945054945055| 87.91208791208791|      39.56043956043956|     95.6043956043956|  98.9010989010989|  101.0989010989011|       32.967032967032964|      31.868131868131865|      Forward|
 | 4.395604395604396|  94.5054945054945|102.19780219780219|  96.7032967032967|70.32967032967034|103.29670329670331|  90.10989010989012|         60.43956043956044|     103.29670329670331|90.10989010989012|  96.7032967032967|91.20879120879121|102.19780219780219|85.71428571428571|             100.0|      72.52747252747253|     96.7032967032967|103.29670329670331|   92.3076923076923|        71.42857142857143|       58.24175824175825|   Midfielder|
+
+### Decision Tree
+
+Our decision tree was trained using entropy and was tested on various maxDepth values.
+
+<div align="center"><img src="Charts/Decision_Tree_Accuracy.png"/></div>
+<p align="center">
+   Figure 3. Decision Tree Accuracy
+</p>
+
+This is the confusion matrix corresponding to our most accurate decision tree:
+
+<div align="center"><img src="Charts/Decision_Tree_CM.png"/></div>
+<p align="center">
+   Figure 4. Best Decision Tree Confusion Matrix
+</p>
+
+Out of 6 trials, the average accuracy was found to be 84.11%, with the minimum being 82.78% and maximum of 84.86% which had a maximum depth of 10. It was not so surprising to see that there isn’t much variation in terms of accuracy across the different maximum depths as we expect a handful of features to be very discriminative, such as ‘shooting’, ‘defending’ and ‘passing’, with the rest having less information gain, and perhaps even contributing to some overfitting.
+
+In the confusion matrix, we saw a pattern that we expected to see. While many forwards were classified correctly, most of those that weren’t classified correct were classified as midfielders, with only a few classified as defenders. Similarly, most of misclassified defenders were incorrectly classified as midfielders instead of forwards. When it comes to midfielders however, it seems that the misclassifications have spilled into either side. This makes sense when imagining a soccer pitch with forwards on one side and defenders playing on the opposite side, with little overlapping happening between them. For midfielders, however, there are those who are considered to be defensive midfielders and others that are attacking midfielders, meaning midfielders have a lot in common with both forwards and defenders.
+
+### Random Forest: 
+
+Our random forests were implemented with varying number of trees. We have decided to use entropy again and, as a maximum depth of 10 yielded our best decision tree, we have used a maximum depth of 10 for all our random forests as well.
+
+<div align="center"><img src="Charts/Random_Forest_Accuracy.png"/></div>
+<p align="center">
+   Figure 5. Random Forest Accuracy
+</p>
+
+This is the confusion matrix corresponding to our most accurate random forest:
+
+<div align="center"><img src="Charts/Random_Forest_CM.png"/></div>
+<p align="center">
+   Figure 6. Best Random Forest Confusion Matrix
+</p>
+
+Our random forests have an average accuracy of 86.62%, with the minimum being 86.16% and maximum being 86.75%. Overall, changing the number of trees in our random forests seemed to have little effect on the outcome. However, with a best score of 86.75% (for two random forests), we were impressed with the result.
+
+The confusion matrix has the same relative result as the decision tree with the same trends that we were expecting.
+
+### Naïve Bayes: 
+
+We have decided to test our naïve bayes algorithm with a smoothing of 1.0. We have not varied the smoothing as our dataset had no null of 0 values.
+
+<div align="center"><img src="Charts/Naive_Bayes_Accuracy.png"/></div>
+<p align="center">
+   Figure 7. Naive Bayes Accuracy
+</p>
+
+<div align="center"><img src="Charts/Naive_Bayes_CM.png"/></div>
+<p align="center">
+   Figure 8. Naive Bayes Confusion Matrix
+</p>
+
+As we have decided to no vary the smoothing parameter, we only tested our naïve bayes once, which yielded an accuracy of 76.85%.
+
+### K Nearest Neighbors: 
+
+We have tested our kNN algorithm with varying number of neighbors.
+
+<div align="center"><img src="Charts/kNN_Accuracy.png"/></div>
+<p align="center">
+   Figure 9. k Nearest Neighbors Accuracy
+</p>
+
+<div align="center"><img src="Charts/kNN_CM.png"/></div>
+<p align="center">
+   Figure 8. Best k Nearest Neighbors Confusion Matrix
+</p>
+
+Our kNN algorithms have an average of 85.62% with a minimum of 84.81% and maximum of 86.73%. While the different test runs did yield relatively similar results, it is very interesting to note that the accuracy of the model seem to be going down with increasing number of neighbors. This was surprising as it went against our expectation. With the popular theory of the most optimal k being the square root of the number of data points, our best accuracy should be with k equal to 210. However, our results suggest that the lower the value of k, the better the result. One possible explanation could be that even within a certain class, our data points are far apart, meaning that, for example, some forwards are further apart from each other than they are to some midfielders.

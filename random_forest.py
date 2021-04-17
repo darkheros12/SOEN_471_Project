@@ -2,6 +2,7 @@ from pyspark.ml.classification import RandomForestClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml.feature import StringIndexer, VectorIndexer, VectorAssembler
 from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
 
 '''
 Parameters: 
@@ -25,6 +26,7 @@ def random_forest(df, seed, num_of_trees_list):
     (training_data, testing_data) = df.randomSplit([0.8, 0.2], seed)  # Split the training and testing data
 
     accuracy_list = []
+    cm_list = []  # List of confusion matrices
     for num_of_trees in num_of_trees_list:
         random_forest = RandomForestClassifier(labelCol="indexed_label", featuresCol="indexed_features", impurity="entropy", numTrees=num_of_trees, maxDepth=10)
         model = random_forest.fit(training_data)
@@ -36,7 +38,7 @@ def random_forest(df, seed, num_of_trees_list):
         accuracy = evaluator.evaluate(predictions)
         accuracy_list.append(accuracy)
 
-        '''y_true = predictions.select(['indexed_label']).collect()
+        y_true = predictions.select(['indexed_label']).collect()
         y_pred = predictions.select(['prediction']).collect()
     
         print("Classification report and confusion matrix for Random Forest with " + str(num_of_trees) + " trees:")
@@ -47,6 +49,8 @@ def random_forest(df, seed, num_of_trees_list):
         print("")
         print(confusion_matrix_corrected[0])
         print(confusion_matrix_corrected[1])
-        print(confusion_matrix_corrected[2])'''
+        print(confusion_matrix_corrected[2])
 
-    return accuracy_list
+        cm_list.append(np.array([confusion_matrix_corrected[0], confusion_matrix_corrected[1], confusion_matrix_corrected[2]]))
+
+    return accuracy_list, cm_list
