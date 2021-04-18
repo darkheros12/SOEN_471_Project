@@ -14,27 +14,35 @@ def main():
 
     seed = 10
 
+    # Run decision tree model on the max depths specified in the list and then show the accuracy chart and confusion matrix of the most accurate results
     max_depth_list = [5, 7, 9, 10, 12, 14]
     dt_accuracy_list, dt_confusion_matrices = decision_tree.decision_tree(df, seed, max_depth_list=max_depth_list)
     plot_bar_accuracy("Decision Tree Accuracy", "Depth", "Accuracy", dt_accuracy_list, max_depth_list)
     for confusion_matrix in dt_confusion_matrices:
         plot_cm(confusion_matrix, "Decision Tree Confusion Matrix")
 
+    # Run random forest on the following list of trees specified and show accuracy chart and confusion matrix of best random forest
     num_of_trees_list = [10, 15, 20, 25, 30, 35]
     rf_accuracy_list, rf_confusion_matrices = random_forest.random_forest(df, seed, num_of_trees_list=num_of_trees_list)
     plot_bar_accuracy("Random Forest Accuracy", "Trees", "Accuracy", rf_accuracy_list, num_of_trees_list)
     for confusion_matrix in rf_confusion_matrices:
         plot_cm(confusion_matrix, "Random Forest Confusion Matrix")
 
+    # For naive bayes only run it once and show the accuracy chart (with only 1 value) and confusion matrix
     nb_accuracy, nb_confusion_matrix = naive_bayes.naive_bayes(df, seed)
     plot_bar_accuracy("Naive Bayes Accuracy", "Smoothing", "Accuracy", [0, 0, nb_accuracy, 0, 0], ["", "", 1.0, "", ""])
     plot_cm(nb_confusion_matrix, "Naïve Bayes Confusion Matrix")
 
+    # Run kNN on specified neighbors values and show accuracy chart and confusion matrix of most accurate kNN
     neighbors_list = [10, 15, 25, 150, 210, 250, 300]
     kNN_accuracy_list, kNN_confusion_matrices = kNN.k_nearest_neighbors(df, seed, neighbors_list=neighbors_list)
     plot_bar_accuracy("K Nearest Neighbors Accuracy", "Neighbors", "Accuracy", kNN_accuracy_list, neighbors_list)
     for confusion_matrix in kNN_confusion_matrices:
         plot_cm(confusion_matrix, "kNN Confusion Matrix")
+
+    # Show the chart comparing the best accuracy from each model
+    best_accuracy_list = [max(dt_accuracy_list), max(rf_accuracy_list), nb_accuracy, max(kNN_accuracy_list)]
+    plot_bar_accuracy("Model Accuracy Comparison", "Models", "Accuracy", best_accuracy_list, ["Decision Tree", "Random Forest", "Naive Bayes", "kNN"])
 
     print("")
 
