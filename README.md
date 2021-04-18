@@ -31,7 +31,7 @@ Finally, most of our work will be done using Apache Spark and our data will be s
 ### Data Preparation
 
 Before we delve into the results of our models, let us go over the data preparation that was required of our dataset.
-First of all, as opposed to what was presented during our presentation, our final results came from training our models on the whole dataset from Fifa 15 to Fifa 21, instead of testing only on the Fifa 21 dataset (19,000 entries). Some comments will be made later on about the differences in the results obtained from these two sets. Therefore, our dataset containing statistics from Fifa 15 to Fifa 21 consisted of 122,841 entries. A sample of the original dataset can be seen below:
+First of all, as opposed to what was presented during our presentation, our final results came from training our models on the whole dataset from Fifa 15 to Fifa 21, instead of testing only on the Fifa 21 dataset (19,000 entries). Therefore, our dataset containing statistics from Fifa 15 to Fifa 21 consisted of 122,841 entries. A sample of the original dataset can be seen below:
 
 |sofifa_id|          player_url|       short_name|           long_name|age|       dob|height_cm|weight_kg|nationality|          club_name|         league_name|league_rank|overall|potential|value_eur|wage_eur|player_positions|preferred_foot|international_reputation|weak_foot|
 |---------|--------------------|-----------------|--------------------|---|----------|---------|---------|-----------|-------------------|--------------------|-----------|-------|---------|---------|--------|----------------|--------------|------------------------|---------|
@@ -41,15 +41,15 @@ First of all, as opposed to what was presented during our presentation, our fina
 |   188545|https://sofifa.co...|   R. Lewandowski|  Robert Lewandowski| 31|1988-08-21|      184|       80|     Poland|  FC Bayern München|German 1. Bundesliga|          1|     91|       91| 80000000|  240000|              ST|         Right|                       4|        4|
 |   190871|https://sofifa.co...|        Neymar Jr|Neymar da Silva S...| 28|1992-02-05|      175|       68|     Brazil|Paris Saint-Germain|      French Ligue 1|          1|     91|       91| 90000000|  270000|         LW, CAM|         Right|                       5|        5|
 
-Then, from the original dataset, we had to cut down a large chunk of the features for various reasons. Even though we only see a handful of them here, the total number of features amounted to 106, which is a lot of information for one player. For example, we had to cut down many columns because they were identification features for the players, such as 'short_name', 'long_name', 'age', 'dob' (date of birth), 'nationality', 'club_name', 'sofifa_id' (website from which data was extracted), etc. All these are information that don’t tell us anything about a player’s position, therefore we deemed them safe to remove.
+Then, from the original dataset, we had to cut down a large chunk of the features for various reasons. Even though we only see a handful of them here, the total number of features amounted to 106, which is a lot of information for one player. For example, we had to cut down many columns because they were identification features for the players, such as 'short_name', 'long_name', 'age', 'dob' (date of birth), 'nationality', 'club_name', 'sofifa_id' (website from which data was extracted), etc. All these are information that don’t tell us anything about a player’s position, therefore we deemed them safe to be removed.
 
 Furthermore, we had to remove all goalkeepers from the dataset due to the fact that many features were goalkeeper specific. To elaborate, many features in the dataset only had values that made sense for goalkeepers, such as ‘gk_speed’, ‘gk_positioning’, and ‘gk_diving’, amongst other things. These features only had values for players that were classified as ‘goalkeepers’, and had null values for forwards, midfielders, and defenders. Therefore, we decided to remove goalkeepers completely and only train our models to predict the other positions.
 
-We also noticed that about 60% of our data were players that were unfortunately classified either as a substitute or as a reserve. Essentially, these players would play as forward, midfielder, or defender but were not classified accordingly, and therefore we had to drop them from our dataset, which left us with about 40% of the original data, which still accounted for about 44,300 entries.
+We also noticed that about 60% of our data were players that were unfortunately classified either as a substitute or as a reserve. Essentially, these players would play as forward, midfielder, or defender but were not classified accordingly, and therefore we had to drop them from our dataset, which left us with about 40% of the original data, which at this point still accounted for about 44,300 entries.
 
-We then had to normalize the ratings of each player as the players’ overall rating ranged from 94 (Lionel Messi’s overall rating) to about 47. The problems arise from the fact that Messi and the 47-rated player could both be classified as forwards, but where Messi’s attacking skills are all around 90, the other player’s ratings would be much lower, and therefore it would be hard to draw conclusion from these two ratings. Therefore, we have divided all the attributes of each player by their overall score so we could evaluate them on the same scale and their attributes would be in relation to their overall score. After this process we removed the overall score feature as well as that did not tell us anything about a player’s field position.
+We then had to normalize the ratings of each player as the players’ overall ratings ranged from 94 (Lionel Messi’s overall rating) to about 47. The problems arise from the fact that Messi and the 47-rated player could both be classified as forwards, but whereas Messi’s attacking skills are all around 90, the other player’s ratings would be much lower, and therefore it would be hard to draw the same conclusion (both being forwards) from these two ratings. Therefore, we have divided all the attributes of each player by their overall score so we could evaluate them on the same scale and their attributes would be in relation to their overall score. After this process we removed the overall score feature as well as that did not tell us anything about a player’s field position.
 
-Finally, the features were all cleaned up and all noisy inputs were removed, but one last problem remained which was the fact that the data set was imbalanced. At this point there were 7,990 forwards, 18551 midfielders, and 17768 defenders. Even though midfielders and defenders were represented somewhat equally, they were both represented twice as much as forwards. Therefore, we decided to oversample the minority class using a technique called SMOTE. The logic of SMOTE is that it will create lines between a pair of points in the minority class, which is the forwards class in our case, and then create new data points from points that fall in these lines. The new points will then resemble pre-existing data points from the minority class. The result of applying SMOTE to our dataset is shown below:
+Finally, the features were all cleaned up but one last problem remained which was the fact that the data set was imbalanced. At this point there were 7,990 forwards, 18,551 midfielders, and 17,768 defenders. Even though midfielders and defenders were represented somewhat equally, they were both represented more than twice as much as forwards. Therefore, we decided to oversample the minority class using a technique called SMOTE. The logic of SMOTE is that it will create lines between a pair of points in the minority class, which is the forwards class in our case, and then create new data points from points that fall in these lines. The new points will then resemble pre-existing data points from the minority class. The result of applying SMOTE to our dataset is shown below:
 
 Before SMOTE:
 
@@ -75,9 +75,9 @@ Our final dataset contains a total of 55,653 entries with 21 features as seen in
 |5.4945054945054945|  93.4065934065934|  94.5054945054945|103.29670329670331|39.56043956043956|  93.4065934065934|   95.6043956043956|         68.13186813186813|       95.6043956043956| 95.6043956043956|104.39560439560441| 97.8021978021978| 89.01098901098901|105.4945054945055| 87.91208791208791|      39.56043956043956|     95.6043956043956|  98.9010989010989|  101.0989010989011|       32.967032967032964|      31.868131868131865|      Forward|
 | 4.395604395604396|  94.5054945054945|102.19780219780219|  96.7032967032967|70.32967032967034|103.29670329670331|  90.10989010989012|         60.43956043956044|     103.29670329670331|90.10989010989012|  96.7032967032967|91.20879120879121|102.19780219780219|85.71428571428571|             100.0|      72.52747252747253|     96.7032967032967|103.29670329670331|   92.3076923076923|        71.42857142857143|       58.24175824175825|   Midfielder|
 
-To obtain the following results, our dataset was split 80:20 while using a seed so that we could duplicate the split for the different algorithms.
-
 ### Decision Tree
+
+To obtain the following results (for all models), our dataset was split 80:20 while using a seed so that we could duplicate the split for the different algorithms.
 
 Our decision tree was trained using entropy and was tested on various maxDepth values.
 
@@ -95,11 +95,11 @@ This is the confusion matrix corresponding to our most accurate decision tree:
 
 Out of 6 trials, the average accuracy was found to be 84.11%, with the minimum being 82.78% and maximum of 84.86% which had a maximum depth of 10. It was not so surprising to see that there isn’t much variation in terms of accuracy across the different maximum depths as we expect a handful of features to be very discriminative, such as ‘shooting’, ‘defending’ and ‘passing’, with the rest having less information gain, and perhaps even contributing to some overfitting.
 
-In the confusion matrix, we saw a pattern that we expected to see. While many forwards were classified correctly, most of those that weren’t classified correct were classified as midfielders, with only a few classified as defenders. Similarly, most of misclassified defenders were incorrectly classified as midfielders instead of forwards. When it comes to midfielders however, it seems that the misclassifications have spilled into either side. This makes sense when imagining a soccer pitch with forwards on one side and defenders playing on the opposite side, with little overlapping happening between them. For midfielders, however, there are those who are considered to be defensive midfielders and others that are attacking midfielders, meaning midfielders have a lot in common with both forwards and defenders.
+In the confusion matrix, we saw a pattern that we expected to see. While many forwards were classified correctly, most of those that weren’t classified correctly were classified as midfielders, with only a few classified as defenders. Similarly, most of misclassified defenders were incorrectly classified as midfielders instead of forwards. When it comes to midfielders however, it seems that the misclassifications have spilled into either side. This makes sense when imagining a soccer pitch with forwards on one side and defenders playing on the opposite side, with little overlapping happening between them. For midfielders, however, there are those who are considered to be defensive midfielders and others that are attacking midfielders, meaning midfielders have a lot in common with both forwards and defenders.
 
 ### Random Forest
 
-Our random forests were implemented with varying number of trees. We have decided to use entropy again and, as a maximum depth of 10 yielded our best decision tree, we have used a maximum depth of 10 for all our random forests as well.
+Our random forests were implemented with varying number of trees. We have decided to use entropy again and, as a maximum depth of 10 yielded our best decision tree, we have used a maximum depth of 10 for all of our random forests as well.
 
 <div align="center"><img src="Charts/Random_Forest_Accuracy.png"/></div>
 <p align="center">
@@ -113,13 +113,13 @@ This is the confusion matrix corresponding to our most accurate random forest:
    Figure 6. Best Random Forest Confusion Matrix
 </p>
 
-Our random forests have an average accuracy of 86.62%, with the minimum being 86.16% and maximum being 86.75%. Overall, changing the number of trees in our random forests seemed to have little effect on the outcome. However, with a best score of 86.75% (for two random forests), we were impressed with the result.
+Our random forests have an average accuracy of 86.62%, with the minimum being 86.16% and maximum being 86.75%. Overall, changing the number of trees in our random forests seemed to have little effect on the outcome. However, with a best score of 86.75% (for two random forests), we were impressed with the results.
 
-The confusion matrix has the same relative result as the decision tree with the same trends that we were expecting.
+The confusion matrix has the same relative correlations as the decision tree with the same trends that we were expecting to see.
 
 ### Naïve Bayes
 
-We have decided to test our naïve bayes algorithm with a smoothing of 1.0. We have not varied the smoothing as our dataset had no null of 0 values.
+We have decided to test our naïve bayes algorithm with a smoothing of 1.0. We have not varied the smoothing as our dataset had no null or 0 values.
 
 <div align="center"><img src="Charts/Naive_Bayes_Accuracy.png"/></div>
 <p align="center">
@@ -147,7 +147,7 @@ We have tested our kNN algorithm with varying number of neighbors.
    Figure 8. Best k Nearest Neighbors Confusion Matrix
 </p>
 
-Our kNN algorithms have an average of 85.62% with a minimum of 84.81% and maximum of 86.73%. While the different test runs did yield relatively similar results, it is very interesting to note that the accuracy of the model seem to be going down with increasing number of neighbors. This was surprising as it went against our expectation. With the popular theory of the most optimal k being the square root of the number of data points, our best accuracy should be with k equal to 210. However, our results suggest that the lower the value of k, the better the result. One possible explanation could be that even within a certain class, our data points are far apart, meaning that, for example, some forwards are further apart from each other than they are to some midfielders.
+Our kNN algorithms have an average of 85.62% with a minimum of 84.81% and maximum of 86.73%. While the different test runs did yield relatively similar results, it is very interesting to note that the accuracy of the model seemed to be going down with increasing number of neighbors. This was surprising as it went against our expectation. With the popular theory of the most optimal k being the square root of the number of data points, our best accuracy should be with k equal to 210. However, our results suggest that the lower the value of k, the better the result. One possible explanation could be that even within a certain class, our data points are far apart, meaning that, for example, some forwards are further apart from each other than they are to some midfielders.
 
 ***
 
@@ -162,29 +162,29 @@ As seen in the results, random forest seems to be our most accurate model, even 
 
 First of all, we can see that our random forest model is better than our decision tree, not just here but also throughout all the different testing as seen earlier. That is to be expected as random forests should definitely perform better than decision trees as they essentially use multiple trees when predicting outcomes, so we had no surprise there. Random forests are more robust than decision trees, specially when it comes to overfitting, therefore it was reassuring to see that our random forest performs better.
 
-It is also interesting to see from our confusion matrices that the increase in overall accuracy in our random forest model is mainly due to predicting midfielders more correctly compared to decision tree. For the purpose of this project, however, we are interested in general accuracy as opposed to precision or recall as we are interested in all 3 classes (forwards, midfielders, defenders) equally.
+It is also interesting to see from our confusion matrices that the increase in overall accuracy in our random forest model is mainly due to predicting midfielders more correctly compared to our decision tree. For the purpose of this project, however, we are interested in general accuracy as opposed to precision or recall as we are interested in all 3 classes (forwards, midfielders, defenders) equally.
 
-Another interesting thing to note is that while our kNN model seems to be going n toe-to-toe with our random forest model with a difference of only 0.02% in accuracy, their confusion matrices show that they are better at predicting different classes. As highlighted before, our random forest excels in predicting midfielders compared to other models, but our kNN model seems to be very accurate in predicting forwards and defenders. 
+Another interesting thing to note is that while our kNN model seems to be going toe-to-toe with our random forest model with a difference of only 0.02% in accuracy, their confusion matrices show that they are better at predicting different classes. As highlighted before, our random forest excels in predicting midfielders compared to other models, but our kNN model seems to be very accurate in predicting forwards and defenders. 
 
-Overall, the relative accuracy of each model seems to match what we have seen in class, as seen in the following figure:
+Overall, the relation between accuracies of each model seems to match what we have seen in class, as seen in the following figure:
 
 <div align="center"><img src="Charts/Model_Comparison_Table.png"/></div>
 <p align="center">
-   Figure 10. Comparing Learning Algorithms
+   Figure 10. Comparing Various Learning Algorithms
 </p>
 
-We can see that decision tree and kNN are both two stars, which is consistent with our results, with their accuracy differing only by a few percent. Meanwhile, naïve bayes has one star and we see from our results that it is around 10% less accurate than our other models, which is again consistent with our findings.
+We can see that the accuracy of decision tree and kNN are both two stars, which is consistent with our results, with their accuracy differing only by a few percent. Meanwhile, naïve bayes has one star and we see from our results that it is around 10% less accurate than our other models, which is again consistent with our findings.
 
-All in all, since the purpose of this project was to determine the position of a player based on their statistics, we think our highest accuracy being 86.75% (random forest) is satisfactory, specially with what we were given. This leads us to some limitations that we had with this dataset, which we believe hindered us from achieving an accuracy higher than we have gotten. 
+All in all, since the purpose of this project was to determine the position of a player based on their statistics, we think our highest accuracy of 86.75% (random forest) is satisfactory, specially with what we were given. However, we do believe that there were some limitations with this dataset that hindered us from achieving a higher accuracy.
 
 ### Limitations
 
-We believe that one big limitation that capped our highest accuracies around 86-87% is the fact that our dataset most likely contains a lot of noisy inputs. To elaborate, our dataset contains player statistics from 7 years (Fifa 15 – Fifa 21 inclusively), which means that for a large number of players, their statistics appear multiple times across the different datasets. For example, Lionel Messi is included in all the datasets. However, many of them reinvent themselves and change positions from one year to the next. A perfect example would be the fact that Messi is classified as a forward in Fifa 20, but as a midfielder in Fifa 21 (an attacking midfielder, but midfielder nonetheless). When you take into account all the instances of this happening, it adds up to a large number of entries with the same feature values pointing to different labels. 
+We believe that one big limitation that capped our highest accuracies around 86-87% is the fact that our dataset most likely contains a lot of noisy inputs. To elaborate, our dataset contains player statistics from 7 years (Fifa 15 – Fifa 21 inclusively), which means that for a large number of players, their statistics appear multiple times across the different subsets. However, many of them reinvent themselves and change positions from one year to the next. A perfect example would be the fact that Lionel Messi is classified as a forward in Fifa 20, but as a midfielder in Fifa 21 (an attacking midfielder, but a midfielder nonetheless). When you take into account all the instances of this happening, it adds up to a large number of entries with the (nearly) same feature values pointing to different labels. 
 
-A second limitation could be the general ambiguity when it comes to classifying midfielders. This is easily visualized from the confusion matrices above that show us clearly that midfielders are the least predictable class, as attacking midfielders have more in common with forwards than they do with defensive midfielders.
+A second limitation could be the general ambiguity when it comes to classifying midfielders. This is easily visualized from the confusion matrices above that show us clearly that midfielders are the least predictable class, as, for example, attacking midfielders have more in common with forwards than they do with defensive midfielders.
 
 By taking into account those limitations, it is understandable why our models were not able to push past 90% accuracy.
 
 ### Future Work
 
-In terms of future work, we don’t believe that a larger dataset would be provide much more information than the dataset we have used, as the same limitations would remain. However, one interesting experiment would be to train this dataset using a better algorithm than the ones we have chosen. An algorithm that would be better equipped to deal with the current limitations, perhaps a model trained by using neural networks. 
+In terms of future work, we don’t think that a larger dataset would be provide much more information than the dataset we have used, as the same limitations would remain. However, one interesting experiment would be to train this dataset using a better algorithm than the ones we have chosen, perhaps neural networks, and see if it can finally push the 90% barrier.
