@@ -183,7 +183,7 @@ We believe that one big limitation that capped our highest accuracies around 86-
 
 A second limitation could be the general ambiguity when it comes to classifying midfielders. This is easily visualized from the confusion matrices above that show us clearly that midfielders are the least predictable class, as, for example, attacking midfielders have more in common with forwards than they do with defensive midfielders.
 
-Some other constraint, in the initial dataset, the amount of attackers are significantly lower than defenders and midfielders as shown above. The dataset had to be oversampled to have an even data distribution which can lead to some biased results. 
+Some other constraint, in the initial dataset, the amount of attackers were significantly lower than defenders and midfielders as shown above. The dataset had to be oversampled to have an even data distribution which, depending on the quality of the new samples, could have affected the outcome.
 
 By taking into account those limitations, it is understandable why our models were not able to push past 90% accuracy.
 
