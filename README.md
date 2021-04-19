@@ -1,16 +1,16 @@
 # SOEN_471_Project
 
 ## Abstract
-This project is a dataset analysis on statistics related to football. More specifically, this dataset contains statistics on over 18 000 players such as dribbling, passing, shooting, defending, and stamina from data collected by sofifa.com. The data collected are stats spanning from the 2015 to 2021 season. The objective of this project is to apply supervised classification techniques to classify player's position based on their statistics and predict which positions they are most likely to play in. Some of the possible positions for players are goalkeeper, defender, midfielder and attacker.
+This project is a dataset analysis on statistics related to football. More specifically, this dataset contains statistics on over 18 000 players such as dribbling, passing, shooting, defending, and stamina from data collected by sofifa.com. The data collected are stats spanning from the 2015 to 2021 season. The objective of this project is to apply supervised classification techniques to classify a player's position based on their statistics and predict which positions they are most likely to play in. The positions for players are goalkeeper, defender, midfielder and forward.
 
 https://www.kaggle.com/stefanoleone992/fifa-21-complete-player-dataset
 
 ***
 
 ## Introduction
-Football is one of the biggest entertainments in the world. With more than 18 000 professional players across the world, it has become very hard to find players that could be a fit in a football club. As a fanatic of football, we pick an Interest of player's performance on certain position. Players tend to perform better in certain position than others.  There are many positions in football such as full-back, centre-back, sweeper, goalkeeper, wing-back, defensive-midfield, central-midfield, attacking-midfield, forward, winger and striker. All those positions have their effect on the game. Assembling a team with different position is essential to make a more fluid gameplay and bring out the best experience for the players. There are multiple factors that might affect the game such as player’s experience, formations, strategies etc. However, for the scope of this project, we will solely focus on positions.
+Football is one of the biggest entertainments in the world. With more than 18 000 professional players across the world, it has become very hard to find players that could be a fit in a football club. As fanatics of football, we pick an interest of player's performance on certain position. Players tend to perform better in certain position than others.  There are many positions in football such as full-back, centre-back, sweeper, goalkeeper, wing-back, defensive-midfield, central-midfield, attacking-midfield, forward, winger and striker. All those positions have their effect on the game. Assembling a team with different position is essential to make a more fluid gameplay and bring out the best experience for the players. There are multiple factors that might affect the game such as player’s experience, formations, strategies etc. However, for the scope of this project, we will solely focus on positions.
 
-The main objective is to use the player’s stats from 2015 to 2021 to predict potential player's position based on trained stats. This will allow potential coaches or football adept to use players in their best position.
+The main objective is to use the player’s stats from 2015 to 2021 to predict a player's position based on trained stats. This will allow potential coaches or football adept to use players in their best position.
 
 The current problem is coaches have difficult time to pick players based on their abilities. Often, they would put players in their unpreferred position because no one can fill those holes. During transfer session, it is often hard to find an adequate player to buy because of the uncertainty of their preferred position. Thus, this project is intended to solve the problem of future player based on previous trained models. It will predict if the player is fit for a certain position or not. 
 
@@ -183,7 +183,7 @@ We believe that one big limitation that capped our highest accuracies around 86-
 
 A second limitation could be the general ambiguity when it comes to classifying midfielders. This is easily visualized from the confusion matrices above that show us clearly that midfielders are the least predictable class, as, for example, attacking midfielders have more in common with forwards than they do with defensive midfielders.
 
-Some other constraint, in the initial dataset, the amount of attackers are significantly lower than defenders and midfielders as shown above. The dataset have to be oversample to have an even data distribution in which can leads to some bias result. 
+Some other constraint, in the initial dataset, the amount of attackers are significantly lower than defenders and midfielders as shown above. The dataset had to be oversampled to have an even data distribution which can lead to some biased results. 
 
 By taking into account those limitations, it is understandable why our models were not able to push past 90% accuracy.
 
